@@ -160,7 +160,7 @@ class Task(models.Model):
         (EVERY_4_WEEKS, 'every 4 weeks'),
         (NEVER, 'never'),
     )
-    repeat = models.BigIntegerField(choices=REPEAT_CHOICES, default=NEVER)
+    repeat = models.BigIntegerField(default=NEVER, help_text='In Minutes')
     repeat_until = models.DateTimeField(null=True, blank=True)
 
     # the "name" of the queue this is to be run on
@@ -187,6 +187,17 @@ class Task(models.Model):
     creator = GenericForeignKey('creator_content_type', 'creator_object_id')
 
     objects = TaskManager()
+
+    def encode_repeat(self):
+        return int(self.repeat/60)
+
+    def clean(self, *args, **kwargs):
+        self.repeat = self.repeat*60
+        super().clean(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
 
     def locked_by_pid_running(self):
         """
