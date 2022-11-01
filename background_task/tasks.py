@@ -286,7 +286,7 @@ class TaskProxy(object):
         queue = kwargs.pop('queue', self.queue)
         verbose_name = kwargs.pop('verbose_name', None)
         creator = kwargs.pop('creator', None)
-        repeat = kwargs.pop('repeat', None)
+        repeat = kwargs.pop('repeat', None)*60
         repeat_until = kwargs.pop('repeat_until', None)
         remove_existing_tasks =  kwargs.pop('remove_existing_tasks', self.remove_existing_tasks)
 
